@@ -77,7 +77,7 @@ export default function AppLayout({
             to="/dashboard"
             className="flex items-center gap-2"
           >
-            <div className="w-9 h-9 rounded-md bg-[#1E3F33] flex items-center justify-center">
+            <div className="w-9 h-9 rounded-md bg-[#B91C1C] flex items-center justify-center">
               <Sparkles
                 className="w-5 h-5 text-white"
                 strokeWidth={1.5}
@@ -107,8 +107,8 @@ export default function AppLayout({
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 my-1 rounded-md text-sm transition-colors ${
                     isActive
-                      ? "bg-[#F4F2EE] text-[#1E3F33] font-medium"
-                      : "text-[#1A1D1C] hover:bg-[#F4F2EE]"
+                      ? "bg-[#FEE2E2] text-[#B91C1C] font-medium"
+                      : "text-[#1A1D1C] hover:bg-[#FEE2E2]"
                   }`
                 }
               >
