@@ -51,7 +51,7 @@ export default function Landing() {
       <header className="border-b border-[#E5E1D8] bg-white">
         <div className="max-w-7xl mx-auto px-6 md:px-12 py-5 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-md bg-[#B91C1C] flex items-center justify-center">
+git commit -m "Add latest project updates"            <div className="w-9 h-9 rounded-md bg-[#B91C1C] flex items-center justify-center">
               <Sparkles
                 className="w-5 h-5 text-white"
                 strokeWidth={1.5}
