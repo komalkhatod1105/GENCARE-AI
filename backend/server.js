@@ -20,10 +20,7 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }))
 // MongoDB Connection
 const mongoUri = process.env.MONGO_URI || "mongodb://localhost:27017/gencare"
 mongoose
-  .connect(mongoUri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(mongoUri)
   .then(() => {
     console.log("✓ MongoDB connected")
   })
