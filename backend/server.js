@@ -3,99 +3,63 @@ import express from "express"
 import mongoose from "mongoose"
 import cors from "cors"
 
+import authRoutes from "./routes/authRoutes.js"
+import predictionRoutes from "./routes/predictionRoutes.js"
+import reportRoutes from "./routes/reportRoutes.js"
+import donationRoutes from "./routes/donationRoutes.js"
+import medicineRoutes from "./routes/medicineRoutes.js"
+import chatRoutes from "./routes/chatRoutes.js"
+
 dotenv.config()
 
 const app = express()
 app.use(cors())
 app.use(express.json())
+app.use(express.urlencoded({ limit: "50mb", extended: true }))
 
-const users = []
-const dbStatus = {
-  connected: false,
-  error: null,
-}
+// MongoDB Connection
+const mongoUri = process.env.MONGO_URI || "mongodb://localhost:27017/gencare"
+mongoose
+  .connect(mongoUri)
+  .then(() => {
+    console.log("✓ MongoDB connected")
+  })
+  .catch((error) => {
+    console.error("✗ MongoDB connection error:", error.message)
+  })
 
-const mongoUri = process.env.MONGO_URI
-if (mongoUri) {
-  mongoose
-    .connect(mongoUri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    })
-    .then(() => {
-      dbStatus.connected = true
-      console.log("MongoDB connected")
-    })
-    .catch((error) => {
-      dbStatus.error = error.message
-      console.error("MongoDB connection error:", error.message)
-    })
-} else {
-  console.log("No MONGO_URI configured. Using in-memory auth store.")
-}
-
+// Health Check
 app.get("/", (req, res) => {
   res.send("GeneCare AI Backend Running")
 })
 
-app.get("/api/test", (req, res) => {
-  res.json({ status: "ok" })
-})
-
-app.get("/api/db-status", (req, res) => {
+app.get("/api/health", (req, res) => {
   res.json({
-    connected: dbStatus.connected,
-    error: dbStatus.error,
-    mongoUriConfigured: Boolean(mongoUri),
+    status: "ok",
+    database: mongoose.connection.readyState === 1 ? "connected" : "disconnected",
   })
 })
 
-app.post("/api/auth/register", (req, res) => {
-  const { name, email, password } = req.body
+// API Routes
+app.use("/api/auth", authRoutes)
+app.use("/api/predictions", predictionRoutes)
+app.use("/api/reports", reportRoutes)
+app.use("/api/donations", donationRoutes)
+app.use("/api/medicines", medicineRoutes)
+app.use("/api/chat", chatRoutes)
 
-  if (!name || !email || !password) {
-    return res.status(400).json({ message: "Name, email, and password are required" })
-  }
-
-  const existing = users.find((user) => user.email === email.toLowerCase())
-  if (existing) {
-    return res.status(409).json({ message: "User already exists" })
-  }
-
-  const newUser = {
-    id: Date.now().toString(),
-    name,
-    email: email.toLowerCase(),
-    token: `token-${Date.now()}`,
-  }
-
-  users.push({ ...newUser, password })
-  return res.status(201).json(newUser)
+// 404 Handler
+app.use((req, res) => {
+  res.status(404).json({ message: "Route not found" })
 })
 
-app.post("/api/auth/login", (req, res) => {
-  const { email, password } = req.body
-
-  if (!email || !password) {
-    return res.status(400).json({ message: "Email and password are required" })
-  }
-
-  const user = users.find(
-    (record) => record.email === email.toLowerCase() && record.password === password,
-  )
-
-  if (!user) {
-    return res.status(401).json({ message: "Invalid email or password" })
-  }
-
-  return res.json({
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    token: user.token,
-  })
+// Error Handler
+app.use((err, req, res, next) => {
+  console.error(err.stack)
+  res.status(500).json({ message: "Internal server error", error: err.message })
 })
 
-app.listen(5000, () => {
-  console.log("Server running on port 5000")
+const PORT = process.env.PORT || 5000
+app.listen(PORT, () => {
+  console.log(`✓ Server running on port ${PORT}`)
 })

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { formatError } from "@/lib/api";
-import { Sparkles } from "lucide-react";
+import { Heart } from "lucide-react";
 
 export default function Login() {
   const { login } = useAuth();
@@ -36,7 +36,7 @@ export default function Login() {
           className="flex items-center gap-2 mb-8 justify-center"
         >
           <div className="w-9 h-9 rounded-md bg-[#B91C1C] flex items-center justify-center">
-            <Sparkles
+            <Heart
               className="w-5 h-5 text-white"
               strokeWidth={1.5}
             />

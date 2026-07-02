@@ -16,7 +16,7 @@ import {
   Stethoscope,
   Droplet,
   LogOut,
-  Sparkles,
+  Heart,
 } from "lucide-react";
 
 const navItems = [
@@ -78,7 +78,7 @@ export default function AppLayout({
             className="flex items-center gap-2"
           >
             <div className="w-9 h-9 rounded-md bg-[#B91C1C] flex items-center justify-center">
-              <Sparkles
+              <Heart
                 className="w-5 h-5 text-white"
                 strokeWidth={1.5}
               />

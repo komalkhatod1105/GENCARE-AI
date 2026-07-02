@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import {
-  Sparkles,
   Dna,
   HeartPulse,
   Activity,
@@ -9,6 +8,7 @@ import {
   Droplet,
   Stethoscope,
   ArrowRight,
+  Heart,
 } from "lucide-react";
 
 const features = [
@@ -51,8 +51,8 @@ export default function Landing() {
       <header className="border-b border-[#E5E1D8] bg-white">
         <div className="max-w-7xl mx-auto px-6 md:px-12 py-5 flex items-center justify-between">
           <div className="flex items-center gap-2">
-git commit -m "Add latest project updates"            <div className="w-9 h-9 rounded-md bg-[#B91C1C] flex items-center justify-center">
-              <Sparkles
+            <div className="w-9 h-9 rounded-md bg-[#B91C1C] flex items-center justify-center">
+              <Heart
                 className="w-5 h-5 text-white"
                 strokeWidth={1.5}
               />
