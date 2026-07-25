@@ -23,21 +23,24 @@ export function AuthProvider({ children }) {
   const login = async (email, password) => {
     const response = await apiClient.post("/auth/login", { email, password })
     const payload = response.data
+    const authUser = payload.user || payload
     localStorage.setItem("gc_token", payload.token)
-    setUser(payload)
+    setUser(authUser)
     return payload
   }
 
   const register = async (name, email, password) => {
     const response = await apiClient.post("/auth/register", { name, email, password })
     const payload = response.data
+    const authUser = payload.user || payload
     localStorage.setItem("gc_token", payload.token)
-    setUser(payload)
+    setUser(authUser)
     return payload
   }
 
   const logout = () => {
     localStorage.removeItem("gc_token")
+    localStorage.removeItem("gc_user")
     setUser(null)
   }
 

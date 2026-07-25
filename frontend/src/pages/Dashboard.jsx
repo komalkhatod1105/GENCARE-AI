@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { useAuth } from "@/contexts/AuthContext"
 import { apiClient } from "@/lib/api"
+import RiskChart from "@/components/RiskChart"
 import {
   Droplet,
   Dna,
@@ -155,38 +156,43 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Recent Predictions */}
-      {predictions.length > 0 && (
-        <div className="rounded-3xl border border-[#E5E1D8] bg-white p-6">
-          <h2 className="text-lg font-semibold text-[#1A1D1C] mb-4">Recent Risk Assessments</h2>
-          <div className="space-y-3">
-            {predictions.slice(0, 3).map((pred) => (
-              <div key={pred._id} className="flex items-center justify-between p-3 bg-[#FAF9F6] rounded-lg">
-                <div className="flex items-center gap-3">
-                  {pred.predictionType === "bloodGroup" && <Droplet className="w-5 h-5 text-[#B91C1C]" />}
-                  {pred.predictionType === "diabetes" && <Activity className="w-5 h-5 text-[#B91C1C]" />}
-                  {pred.predictionType === "bloodPressure" && <Heart className="w-5 h-5 text-[#B91C1C]" />}
-                  {pred.predictionType === "geneticRisk" && <Dna className="w-5 h-5 text-[#B91C1C]" />}
-                  <div>
-                    <p className="font-medium text-[#1A1D1C] capitalize">
-                      {pred.predictionType.replace(/([A-Z])/g, " $1").trim()}
-                    </p>
-                    <p className="text-xs text-[#6B726C]">{formatDate(pred.createdAt)}</p>
+      <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-6">
+        {/* Recent Predictions */}
+        {predictions.length > 0 && (
+          <div className="rounded-3xl border border-[#E5E1D8] bg-white p-6">
+            <h2 className="text-lg font-semibold text-[#1A1D1C] mb-4">Recent Risk Assessments</h2>
+            <div className="space-y-3">
+              {predictions.slice(0, 3).map((pred) => (
+                <div key={pred._id} className="flex items-center justify-between p-3 bg-[#FAF9F6] rounded-lg">
+                  <div className="flex items-center gap-3">
+                    {pred.predictionType === "bloodGroup" && <Droplet className="w-5 h-5 text-[#B91C1C]" />}
+                    {pred.predictionType === "diabetes" && <Activity className="w-5 h-5 text-[#B91C1C]" />}
+                    {pred.predictionType === "bloodPressure" && <Heart className="w-5 h-5 text-[#B91C1C]" />}
+                    {pred.predictionType === "geneticRisk" && <Dna className="w-5 h-5 text-[#B91C1C]" />}
+                    {pred.predictionType === "breastCancer" && <Heart className="w-5 h-5 text-[#B91C1C]" />}
+                    <div>
+                      <p className="font-medium text-[#1A1D1C] capitalize">
+                        {pred.predictionType.replace(/([A-Z])/g, " $1").trim()}
+                      </p>
+                      <p className="text-xs text-[#6B726C]">{formatDate(pred.createdAt)}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    {pred.riskScore && (
+                      <p className={`font-bold ${pred.riskScore >= 70 ? "text-red-600" : pred.riskScore >= 40 ? "text-yellow-600" : "text-green-600"}`}>
+                        {pred.riskScore}%
+                      </p>
+                    )}
+                    {pred.confidence && <p className="text-xs text-[#6B726C]">{pred.confidence}% confidence</p>}
                   </div>
                 </div>
-                <div className="text-right">
-                  {pred.riskScore && (
-                    <p className={`font-bold ${pred.riskScore >= 70 ? "text-red-600" : pred.riskScore >= 40 ? "text-yellow-600" : "text-green-600"}`}>
-                      {pred.riskScore}%
-                    </p>
-                  )}
-                  {pred.confidence && <p className="text-xs text-[#6B726C]">{pred.confidence}% confidence</p>}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+
+        <RiskChart predictions={predictions} />
+      </div>
 
       {/* Quick Actions */}
       <div className="rounded-3xl border border-[#E5E1D8] bg-white p-6">

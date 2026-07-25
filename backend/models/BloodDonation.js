@@ -20,6 +20,14 @@ const bloodDonationSchema = new mongoose.Schema(
         location: String,
       },
     ],
+    bloodGroup: String,
+    weight: Number,
+    hasMedicalConditions: {
+      type: Boolean,
+      default: false,
+    },
+    medicalConditions: String,
+    previousDonationDate: Date,
     lastDonationDate: Date,
     nextEligibleDate: Date,
     totalDonations: {

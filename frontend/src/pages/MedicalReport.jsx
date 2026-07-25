@@ -33,7 +33,7 @@ export default function MedicalReport() {
       const formData = new FormData()
       formData.append("file", file)
 
-      const response = await apiClient.post("/reports", formData, {
+      const response = await apiClient.post("/reports/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       })
 

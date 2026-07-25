@@ -8,7 +8,7 @@ import {
   Droplet,
   Stethoscope,
   ArrowRight,
-  Heart,
+  Sparkles,
 } from "lucide-react";
 
 const features = [
@@ -92,8 +92,7 @@ export default function Landing() {
 
             <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-medium tracking-tight leading-tight text-[#1A1D1C]">
               Genetic Insights,
-              <span className="text-[#B91C1C]">
-              </span>
+              <span className="text-[#B91C1C]"> Personal Care</span>
             </h1>
 
             <p className="mt-6 text-lg text-[#6B726C] max-w-xl">

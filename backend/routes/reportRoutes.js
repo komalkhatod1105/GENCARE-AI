@@ -1,5 +1,6 @@
 import express from "express"
 import {
+  upload,
   uploadReport,
   getReports,
   getReportById,
@@ -10,7 +11,7 @@ import { authMiddleware } from "../middleware/auth.js"
 
 const router = express.Router()
 
-router.post("/upload", authMiddleware, uploadReport)
+router.post("/upload", authMiddleware, upload.single("file"), uploadReport)
 router.get("/", authMiddleware, getReports)
 router.get("/:id", authMiddleware, getReportById)
 router.put("/:id/analysis", authMiddleware, updateReportAnalysis)
