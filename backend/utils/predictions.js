@@ -202,6 +202,51 @@ export const assessGeneticRisk = (inputs) => {
   }
 }
 
+// Breast Cancer Risk Calculator (rule-based heuristic model)
+export const calculateBreastCancerRisk = (inputs) => {
+  let score = 10
+
+  if (inputs.age > 45) score += 20
+  else if (inputs.age > 35) score += 10
+
+  if (inputs.menarche_age && inputs.menarche_age < 12) score += 10
+  if (inputs.first_pregnancy_age && inputs.first_pregnancy_age > 30) score += 10
+  if (inputs.num_births && inputs.num_births > 2) score += 5
+  if (inputs.breast_feeding_months && inputs.breast_feeding_months < 6) score += 5
+  if (inputs.family_history) score += 20
+  if (inputs.hormone_therapy) score += 15
+
+  if (inputs.menopause_status === "post") score += 10
+  if (inputs.alcohol_consumption === "moderate") score += 8
+  else if (inputs.alcohol_consumption === "heavy") score += 12
+
+  const riskScore = Math.min(100, score)
+  const riskLevel = riskScore >= 70 ? "High" : riskScore >= 40 ? "Medium" : "Low"
+
+  return {
+    riskScore,
+    riskLevel,
+    explanation:
+      "This score is a heuristic assessment based on common breast cancer risk factors such as age, reproductive history, family history, hormone use, and alcohol exposure.",
+    recommendations:
+      riskLevel === "High"
+        ? [
+            "Schedule a clinical breast exam and mammogram",
+            "Discuss genetic counseling with a specialist",
+            "Maintain routine self-examination and follow-up",
+          ]
+        : riskLevel === "Medium"
+          ? [
+              "Continue yearly screening and self-checks",
+              "Maintain a healthy lifestyle and regular medical follow-ups",
+            ]
+          : [
+              "Continue regular checkups and preventive screening",
+              "Stay aware of changes in your breast health",
+            ],
+  }
+}
+
 // Health Score Calculator
 export const calculateHealthScore = (userData) => {
   let score = 100

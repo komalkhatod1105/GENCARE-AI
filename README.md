@@ -1,71 +1,80 @@
 # GeneCare AI
 
-GeneCare AI is a full-stack healthcare app with a React/Vite frontend and an Express backend.
-It includes authentication, protected health tools, and a simple backend API for login and registration.
+GeneCare AI is a full-stack healthcare application with a React/Vite frontend and an Express + MongoDB backend. It includes user authentication, protected health tools, dashboards, prediction pages, and medical report workflows.
 
 ## Features
 - User registration and login
 - Protected dashboard and feature pages
 - Health tools: diabetes risk, blood pressure analyzer, blood group, genetic risk, breast cancer, medical report, blood donation
-- Backend API with CORS support
-- LocalStorage auth persistence in frontend
+- Backend API with CORS and JWT auth
+- MongoDB-backed user storage
+- Frontend auth persistence via local storage
 
 ## Prerequisites
-- Node.js 18+ / npm
+- Node.js 18+ and npm
+- Docker Desktop (for MongoDB locally)
 - Git (optional)
 
-## Setup
+## Quick Start
 
-### Backend
+### 1) Install dependencies
+```bash
+cd backend && npm install
+cd ../frontend && npm install
+```
+
+### 2) Start MongoDB
+```bash
+docker compose up -d mongodb
+```
+
+### 3) Configure environment files
+The repository already contains working defaults, but you can copy the examples if needed:
+```bash
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
+```
+
+### 4) Run backend
 ```bash
 cd backend
-npm install
 npm run dev
 ```
-The backend runs on `http://localhost:5000` by default.
+Backend runs on http://localhost:5000.
 
-### Frontend
+### 5) Run frontend
+In a second terminal:
 ```bash
 cd frontend
-npm install
-```
-Ensure `frontend/.env` contains:
-```env
-VITE_BACKEND_URL=http://localhost:5000
-```
-Then start the frontend:
-```bash
 npm run dev
 ```
-Open the app at `http://localhost:5175`.
+Open http://localhost:5175.
 
 ## Available Scripts
 
-### Frontend
-- `npm run dev` — start Vite development server
-- `npm run build` — build production assets
-- `npm run preview` — preview built app (if configured)
-
 ### Backend
-- `npm run dev` — start backend with nodemon
-- `npm start` — run backend with Node
+- `npm run dev` — start the API with nodemon
+- `npm start` — start the API with Node
 
-## API Endpoints
+### Frontend
+- `npm run dev` — start the Vite development server
+- `npm run build` — create a production build
+- `npm run preview` — preview the production build
+
+## Main API Endpoints
 - `POST /api/auth/register` — register a new user
 - `POST /api/auth/login` — authenticate a user
-- `GET /api/test` — backend health check
-
-## Notes
-- Current backend stores users in memory only; restarting the backend clears all accounts.
-- If you see a network error, confirm the backend is running and `VITE_BACKEND_URL` matches the backend URL.
+- `GET /api/health` — backend health check
+- `GET /api/auth/profile` — get authenticated user profile
 
 ## Project Structure
 - `frontend/` — React application with routes, authentication, and UI pages
-- `backend/` — Express server with auth endpoints and CORS enabled
+- `backend/` — Express server, controllers, models, and routes
+- `docker-compose.yml` — MongoDB container configuration
 
 ## Troubleshooting
-- Start backend first, then frontend.
-- Check browser console for request errors.
-- Confirm `backend/server.js` is running on port `5000`.
+- Start MongoDB first, then start the backend.
+- If requests fail, verify that the backend is running on port 5000 and that the frontend can reach it via the Vite proxy.
+- If you change ports, update the backend `.env` and frontend `.env` accordingly.
 
 

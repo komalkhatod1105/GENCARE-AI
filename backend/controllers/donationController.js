@@ -2,17 +2,38 @@ import BloodDonation from "../models/BloodDonation.js"
 
 export const registerAsDonor = async (req, res) => {
   try {
+    const { bloodGroup, weight, hasMedicalConditions, medicalConditions, previousDonationDate } = req.body
+
+    const normalizedWeight = Number(weight)
+
+    if (!bloodGroup || !normalizedWeight) {
+      return res.status(400).json({ message: "Blood group and weight are required" })
+    }
+
+    if (normalizedWeight < 50) {
+      return res.status(400).json({ message: "Minimum weight required is 50 kg" })
+    }
+
     let donation = await BloodDonation.findOne({ userId: req.userId })
 
+    const donorData = {
+      userId: req.userId,
+      isDonor: true,
+      bloodGroup,
+      weight: normalizedWeight,
+      hasMedicalConditions: Boolean(hasMedicalConditions),
+      medicalConditions: medicalConditions || "",
+      previousDonationDate: previousDonationDate ? new Date(previousDonationDate) : null,
+      lastDonationDate: previousDonationDate ? new Date(previousDonationDate) : null,
+      nextEligibleDate: previousDonationDate
+        ? new Date(new Date(previousDonationDate).getTime() + 56 * 24 * 60 * 60 * 1000)
+        : new Date(),
+    }
+
     if (!donation) {
-      donation = await BloodDonation.create({
-        userId: req.userId,
-        isDonor: true,
-        lastDonationDate: null,
-        nextEligibleDate: new Date(),
-      })
+      donation = await BloodDonation.create(donorData)
     } else {
-      donation.isDonor = true
+      Object.assign(donation, donorData)
       await donation.save()
     }
 
@@ -87,10 +108,17 @@ export const searchDonors = async (req, res) => {
   try {
     const { bloodGroup, city } = req.query
 
-    const donors = await BloodDonation.find({
-      isDonor: true,
-      "donationHistory.bloodGroup": bloodGroup,
-    }).populate("userId", "name phone profile.emergencyContact")
+    const query = { isDonor: true }
+
+    if (bloodGroup) {
+      query.bloodGroup = bloodGroup
+    }
+
+    if (city) {
+      query.location = city
+    }
+
+    const donors = await BloodDonation.find(query).populate("userId", "name phone profile.emergencyContact")
 
     res.json({
       count: donors.length,
